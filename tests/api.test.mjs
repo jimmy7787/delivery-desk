@@ -7,10 +7,10 @@ import ts from "typescript";
 const require=createRequire(import.meta.url);
 const fromWrangler=createRequire(require.resolve("wrangler/package.json"));
 const {Miniflare}=fromWrangler("miniflare");
-await mkdir(".sites-runtime",{recursive:true});
+await mkdir(".runtime",{recursive:true});
 const source=await readFile("lib/core.ts","utf8");
-await writeFile(".sites-runtime/test-core.mjs",ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText);
-const {handleApi}=await import("../.sites-runtime/test-core.mjs");
+await writeFile(".runtime/test-core.mjs",ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText);
+const {handleApi}=await import("../.runtime/test-core.mjs");
 const mf=new Miniflare({modules:true,script:"export default {fetch(){return new Response('ok')}}",compatibilityDate:"2026-05-15",d1Databases:{DB:"test-production",UAT:"test-uat"}});
 const db=await mf.getD1Database("DB"),uat=await mf.getD1Database("UAT");
 for(const name of (await readdir("drizzle")).filter(n=>n.endsWith(".sql")).sort()){
