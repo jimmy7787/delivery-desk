@@ -38,8 +38,12 @@ yarn-error.log*
 next-env.d.ts
 /dist/
 /.wrangler/
-# Checkout-local execution profile and tool state; never publish them.
-/.sites-runtime/
+# Local generated files; never publish account settings or database state.
+/.runtime/
+/.pnpm-store/
+/wrangler.production.json
+/.dev.vars
+/.dev.vars.*
 /.agents/
 /.codex/
 /outputs/

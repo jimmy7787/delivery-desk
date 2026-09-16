@@ -1,9 +1,9 @@
 import {env} from "cloudflare:workers";
-import {getChatGPTUser} from "@/app/chatgpt-auth";
+import {getAccessUser} from "./auth";
 import {handleApi,response} from "./core";
 export async function dispatch(request:Request){
   try{
-    const user=await getChatGPTUser();
+    const user=await getAccessUser(request.headers);
     if(!user)return response({error:"Η σύνδεσή σου έληξε. Συνδέσου ξανά."},401);
     if(!env.DB)return response({error:"Η αποθήκευση είναι προσωρινά μη διαθέσιμη."},503);
     return handleApi(request,env.DB,user.userId);
