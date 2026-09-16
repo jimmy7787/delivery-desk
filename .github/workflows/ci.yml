@@ -1,0 +1,24 @@
+name: Validate application
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - uses: pnpm/action-setup@v6
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Check TypeScript
+        run: pnpm exec tsc --noEmit
+      - name: Test database and API authorization
+        run: node --test tests/api.test.mjs
+      - name: Build production worker
+        run: pnpm run build
